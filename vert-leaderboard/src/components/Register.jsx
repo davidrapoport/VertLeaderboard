@@ -33,24 +33,48 @@ function Register() {
     });
   }, []);
 
+  const validateWebId = (webId) => {
+    return webId.search(/\w{8}-\w{3}-\w{3}/gm) !== -1;
+  };
+
   const register = async () => {
-    if (!userName) alert("Please enter a User Name");
-    if (!webId) alert("Please enter your Web Id");
+    if (!userName) {
+      alert("Please enter a User Name");
+      return;
+    }
+    if (!webId || !validateWebId(webId)) {
+      alert("Please enter your Web Id");
+      return;
+    }
+    const cleanWebId = webId.toLowerCase().trim();
     const success = await updateOrRegisterUser({
       userName,
-      webId,
+      webId: cleanWebId,
       showInLeaderBoard,
       department,
     });
+
     if (success) {
       alert("Thank you for registering! See you soon");
-      localStorage.setItem("web-id", webId);
+      localStorage.setItem("web-id", cleanWebId);
     } else {
       alert("Sorry, there seems to be an issue. Try again I guess?");
     }
     setWebId("");
     setUserName("");
   };
+
+  const onChangeWebIdText = (e) => {
+    let text = e.target.value;
+    if (text.length === 8 || text.length === 12) {
+      text = text + "-";
+    }
+    if (text.endsWith("--")) {
+      text = text.substring(0, text.length - 1);
+    }
+    setWebId(text);
+  };
+
   return (
     <div className="register">
       <div className="register__container">
@@ -70,7 +94,7 @@ function Register() {
               type="text"
               className="register__textBox"
               value={webId}
-              onChange={(e) => setWebId(e.target.value)}
+              onChange={onChangeWebIdText}
               placeholder="Alta Web Id"
             />
             <input
