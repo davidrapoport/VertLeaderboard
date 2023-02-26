@@ -1,10 +1,5 @@
 import { initializeApp } from "firebase/app";
-import {
-  getAuth,
-  signInWithEmailAndPassword,
-  createUserWithEmailAndPassword,
-  signOut,
-} from "firebase/auth";
+import { getAuth } from "firebase/auth";
 import {
   getFirestore,
   query,
@@ -12,6 +7,7 @@ import {
   collection,
   where,
   addDoc,
+  updateDoc,
 } from "firebase/firestore";
 
 const firebaseConfig = {
@@ -28,8 +24,31 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
+const getUserFromWebId = async (webId) => {
+  const q = query(collection(db, "users"), where("webId", "==", webId));
+  const docs = await getDocs(q);
+  if (docs.docs.length === 0) {
+    return null;
+  }
+  return docs.docs[0];
+};
+
 const updateOrRegisterUser = async (userInfo) => {
-  console.log(userInfo);
+  const docFromServer = await getUserFromWebId(userInfo.webId);
+  try {
+    if (!docFromServer) {
+      await addDoc(collection(db, "users"), userInfo);
+      console.log("Successfully added a user");
+    } else {
+      console.log(docFromServer);
+      await updateDoc(docFromServer.ref, userInfo);
+      console.log("Successfully updated a user");
+    }
+  } catch (e) {
+    console.error(e);
+    return false;
+  }
+  return true;
 };
 
 const DEPARTMENTS = {
@@ -53,6 +72,7 @@ export {
   auth,
   db,
   updateOrRegisterUser,
+  getUserFromWebId,
   getDepartmentTeamName,
   getDepartments,
 };
