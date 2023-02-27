@@ -6,6 +6,7 @@ import {
 } from "../firebase";
 import { FadeLoader } from "react-spinners";
 import "./Register.css";
+import { useNavigate } from "react-router-dom";
 
 function Register() {
   const [webId, setWebId] = useState("");
@@ -14,6 +15,7 @@ function Register() {
   const [showInLeaderBoard, setShowInLeaderBoard] = useState(true);
   const [department, setDepartment] = useState(getDepartments()[0]);
   const [isLoading, setIsLoading] = useState(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
     setIsLoading(true);
@@ -55,15 +57,15 @@ function Register() {
       showInLeaderBoard,
       department,
     });
-
+    setWebId("");
+    setUserName("");
     if (success) {
       alert("Thank you for registering! See you soon");
       localStorage.setItem("web-id", cleanWebId);
+      navigate("/");
     } else {
       alert("Sorry, there seems to be an issue. Try again I guess?");
     }
-    setWebId("");
-    setUserName("");
   };
 
   const onChangeWebIdText = (e) => {
