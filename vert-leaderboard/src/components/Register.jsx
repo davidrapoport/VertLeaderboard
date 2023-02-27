@@ -9,6 +9,7 @@ import "./Register.css";
 
 function Register() {
   const [webId, setWebId] = useState("");
+  const [hasStoredWebId, setHasStoredWebId] = useState(false);
   const [userName, setUserName] = useState("");
   const [showInLeaderBoard, setShowInLeaderBoard] = useState(true);
   const [department, setDepartment] = useState(getDepartments()[0]);
@@ -21,6 +22,7 @@ function Register() {
       setIsLoading(false);
       return;
     }
+    setHasStoredWebId(true);
     getUserFromWebId(storedWebId).then((docData) => {
       if (docData) {
         const data = docData.data();
@@ -133,7 +135,7 @@ function Register() {
               />
             </div>
             <button className="register__btn" onClick={register}>
-              Register
+              {hasStoredWebId ? "Update" : "Register"}
             </button>
           </>
         )}

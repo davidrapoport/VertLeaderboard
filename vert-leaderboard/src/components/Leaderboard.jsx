@@ -21,10 +21,24 @@ const Leaderboard = () => {
   const navigate = useNavigate();
   const [columnDefs, setColumnDefs] = useState([
     { field: "userName" },
-    { field: "totalVert", sort: "desc" },
-    { field: "vertSinceMonday" },
+    {
+      field: "totalVert",
+      sort: "desc",
+      valueFormatter: (val) => val.value.toLocaleString() + " feet",
+    },
+    {
+      field: "vertSinceMonday",
+      valueFormatter: (val) => val.value.toLocaleString() + " feet",
+    },
     { field: "bestStreak" },
-    { field: "fastestCollinsLap" },
+    {
+      field: "fastestCollinsLap",
+      valueFormatter: (val) =>
+        Math.floor(val.value / 60) +
+        " minutes " +
+        (val.value % 60) +
+        " seconds",
+    },
   ]);
 
   // DefaultColDef sets props common to all Columns

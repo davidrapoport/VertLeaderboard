@@ -47,7 +47,9 @@ const updateOrRegisterUser = async (userInfo) => {
 const getAllUsers = async () => {
   const q = query(collection(db, "users"));
   const docs = await getDocs(q);
-  return docs.docs.map((doc) => doc.data());
+  return docs.docs
+    .map((doc) => doc.data())
+    .filter((user) => !user.failedScraping);
 };
 
 const DEPARTMENTS = {
