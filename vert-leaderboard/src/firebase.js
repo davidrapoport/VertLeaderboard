@@ -8,6 +8,7 @@ import {
   where,
   addDoc,
   updateDoc,
+  connectFirestoreEmulator,
 } from "firebase/firestore";
 
 const firebaseConfig = {
@@ -23,6 +24,7 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
+connectFirestoreEmulator(db, "localhost", 8080);
 
 const getUserFromWebId = async (webId) => {
   const q = query(collection(db, "users"), where("webId", "==", webId));
