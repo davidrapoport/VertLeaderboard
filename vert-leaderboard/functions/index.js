@@ -13,12 +13,10 @@ const {
 } = require("./RideUtils");
 admin.initializeApp();
 
-exports.refreshData = functions.https.onRequest(async (req, res) => {
+const runRefresh = async () => {
   const db = admin.firestore();
-  const usersCollection = await db.collection("users");
-  console.log("here");
+  const usersCollection = db.collection("users");
   const users = await usersCollection.get();
-  let numUsers = 0;
   users.forEach(async (user) => {
     if (user.failedScraping) {
       return;
@@ -47,8 +45,17 @@ exports.refreshData = functions.https.onRequest(async (req, res) => {
       updateData.failedScraping = true;
     } finally {
       user.ref.update(updateData);
-      numUsers++;
     }
   });
-  res.status(200).send("Processed users: " + numUsers);
+};
+
+exports.refreshData = functions.https.onRequest(async (req, res) => {
+  await runRefresh();
+  res.status(200).send("Refreshed Users");
 });
+
+exports.addNewUser = functions.firestore
+  .document("/users/{documentId}")
+  .onCreate((snap, context) => {
+    return runRefresh();
+  });
