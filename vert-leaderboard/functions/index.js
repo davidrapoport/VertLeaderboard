@@ -18,9 +18,9 @@ exports.refreshData = functions.https.onRequest(async (req, res) => {
   const users = await usersCollection.get();
   let numUsers = 0;
   users.forEach(async (user) => {
-    // if (user.failedScraping) {
-    //   return;
-    // }
+    if (user.failedScraping) {
+      return;
+    }
     const webId = user.get("webId");
     let updateData = {};
     try {
@@ -42,8 +42,8 @@ exports.refreshData = functions.https.onRequest(async (req, res) => {
       updateData.failedScraping = true;
     } finally {
       user.ref.update(updateData);
+      numUsers++;
     }
-    numUsers++;
   });
   res.status(200).send("Processed users: " + numUsers);
 });
