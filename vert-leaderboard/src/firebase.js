@@ -15,7 +15,6 @@ import { firebaseConfig } from "./firebaseConfig";
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
-// connectFirestoreEmulator(db, "localhost", 8080);
 
 const getUserFromWebId = async (webId) => {
   const q = query(collection(db, "users"), where("webId", "==", webId));
@@ -67,7 +66,7 @@ const DEPARTMENTS = {
 
 const getDepartments = () => Object.keys(DEPARTMENTS);
 const getDepartmentTeamName = (department) => {
-  return DEPARTMENTS[department] + "( " + department + ")";
+  return DEPARTMENTS[department] + " ( " + department + ")";
 };
 
 export {

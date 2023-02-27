@@ -4,6 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { getAllUsers } from "../firebase";
 import { FadeLoader } from "react-spinners";
 import Leaderboard from "./Leaderboard";
+import DepartmentBoard from "./DepartmentBoard";
 
 const HomeScreen = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -43,7 +44,11 @@ const HomeScreen = () => {
     <div style={{ display: "flex", "flex-direction": "column" }}>
       <Link to={"register"}>Change your username</Link>
       <h1>Leaderboard</h1>
-      <Leaderboard users={users}></Leaderboard>
+      <Leaderboard
+        users={users.filter((u) => u.showInLeaderBoard)}
+      ></Leaderboard>
+      <h1>Department Leaderboard</h1>
+      <DepartmentBoard users={users}></DepartmentBoard>
     </div>
   );
 };

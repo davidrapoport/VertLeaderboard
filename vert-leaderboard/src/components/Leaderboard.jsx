@@ -35,9 +35,14 @@ const Leaderboard = ({ users }) => {
     sortable: true,
   }));
 
+  const tableHeight = Math.min(500, 42 * users.length + 64);
+
   return (
     <div>
-      <div className="ag-theme-alpine" style={{ width: "100%", height: 500 }}>
+      <div
+        className="ag-theme-alpine"
+        style={{ width: "100%", height: tableHeight }}
+      >
         <AgGridReact
           ref={gridRef}
           rowData={users}
