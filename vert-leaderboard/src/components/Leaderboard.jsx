@@ -27,6 +27,10 @@ const Leaderboard = () => {
       valueFormatter: (val) => val.value.toLocaleString() + " feet",
     },
     {
+      field: "biggestDay",
+      valueFormatter: (val) => val.value.toLocaleString() + " feet",
+    },
+    {
       field: "vertSinceMonday",
       valueFormatter: (val) => val.value.toLocaleString() + " feet",
     },
@@ -38,6 +42,9 @@ const Leaderboard = () => {
         " minutes " +
         (val.value % 60) +
         " seconds",
+    },
+    {
+      field: "numberOfCucks",
     },
   ]);
 

@@ -8,6 +8,8 @@ const {
   getBestStreak,
   getCurrentStreak,
   getFastestCollinsLap,
+  getBiggestDay,
+  getNumRidesPerLift,
 } = require("./RideUtils");
 admin.initializeApp();
 
@@ -35,6 +37,9 @@ exports.refreshData = functions.https.onRequest(async (req, res) => {
       updateData.totalVert = rides.reduce((acc, { totalVert }) => {
         return acc + totalVert;
       }, 0);
+      updateData.biggestDay = getBiggestDay(rides).vert;
+      const numRidesPerLift = getNumRidesPerLift(rides);
+      updateData.numberOfCucks = numRidesPerLift["Collins Angle"] ?? 0;
       updateData.failedScraping = false;
       updateData.lastUpdateTime = new Date().toISOString();
     } catch (e) {

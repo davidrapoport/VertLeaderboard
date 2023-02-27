@@ -239,3 +239,5 @@ exports.getVertSinceMonday = getVertSinceMonday;
 exports.getBestStreak = getBestStreak;
 exports.getCurrentStreak = getCurrentStreak;
 exports.getFastestCollinsLap = getFastestCollinsLap;
+exports.getBiggestDay = getBiggestDay;
+exports.getNumRidesPerLift = getNumRidesPerLift;
