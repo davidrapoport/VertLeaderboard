@@ -14,9 +14,9 @@ async function scrapeRides(webId) {
   const metadataResponse = await getUserMetadata(headers, webId);
   const metadataResponseBody = await metadataResponse.json();
   return await getRideData(
-    metadataResponseBody,
-    metadataResponse.headers,
-    headers
+      metadataResponseBody,
+      metadataResponse.headers,
+      headers,
   );
 }
 
@@ -37,7 +37,7 @@ const getAuthCookies = async () => {
 };
 
 const getUserMetadata = async (requestHeaders, webId) => {
-  const data = { wtp: webId, productId: 0 };
+  const data = {wtp: webId, productId: 0};
   const url = "https://shop.alta.com/axess/ride-data";
   const webIdResponse = await fetch(url, {
     method: "POST",
@@ -49,10 +49,10 @@ const getUserMetadata = async (requestHeaders, webId) => {
       throw new Error("Invalid Web Id, please re-enter it and try again.");
     }
     throw new Error(
-      "Request to alta.com failed with error " +
+        "Request to alta.com failed with error " +
         `code ${webIdResponse.status}. ` +
         "Maybe the server is down or you aren't connected " +
-        "to the internet?"
+        "to the internet?",
     );
   }
   return webIdResponse;
@@ -66,7 +66,7 @@ const getCookiesFromResponseHeader = (responseHeader) => {
   let xsrfToken = "";
   let altaSessionCookie = "";
   // Remove cookie metadata and keep COOKIE-NAME=COOKIEVALUE
-  for (let cookieText of cookiesText) {
+  for (const cookieText of cookiesText) {
     const cookieData = cookieText.split(";")[0].trim();
     if (cookieData.startsWith("XSRF-TOKEN")) {
       xsrfCookie = cookieData;
@@ -75,7 +75,7 @@ const getCookiesFromResponseHeader = (responseHeader) => {
       altaSessionCookie = cookieData;
     }
   }
-  const cookies = { "X-XSRF-TOKEN": xsrfToken };
+  const cookies = {"X-XSRF-TOKEN": xsrfToken};
   // if (Platform.OS !== 'ios') {
   cookies.Cookie = xsrfCookie + "; " + altaSessionCookie;
   // }
@@ -89,9 +89,9 @@ const getCSRFToken = (response) => {
 // Need to extract the data from the auth response to use in the rides request.
 // Also need to update to the new XSRF-TOKEN
 const getRideData = async (
-  authResponseBody,
-  authResponseHeaders,
-  requestHeaders
+    authResponseBody,
+    authResponseHeaders,
+    requestHeaders,
 ) => {
   // TODO error handling of malformed WTP.
   const transactions = authResponseBody.transactions[0];
@@ -165,7 +165,7 @@ const filterOutSugarPass = (rides) => {
 };
 
 const getDaysVert = (rides) => {
-  return rides.reduce((acc, { vert }) => {
+  return rides.reduce((acc, {vert}) => {
     return parseInt(vert) + acc;
   }, 0);
 };

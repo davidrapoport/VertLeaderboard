@@ -13,11 +13,11 @@ const CHICKADEE_VERT = 149;
 // Unfortunately I only know people who ski these 5 lifts.
 // Also not all snowbird lifts have scanners.
 const SNOWBIRD_LIFTS = {
-  "Mineral Basin": { name: "Mineral Basin", vert: MINERAL_BASIN_VERT },
-  "Gad Zoom Quad": { name: "Gad Zoom", vert: GADZOOM_VERT },
-  "Peruvian Quad": { name: "Peruvian", vert: PERUVIAN_VERT },
-  Tram: { name: "Tram", vert: TRAM_VERT },
-  "Chickadee Double": { name: "Chickadee", vert: CHICKADEE_VERT },
+  "Mineral Basin": {name: "Mineral Basin", vert: MINERAL_BASIN_VERT},
+  "Gad Zoom Quad": {name: "Gad Zoom", vert: GADZOOM_VERT},
+  "Peruvian Quad": {name: "Peruvian", vert: PERUVIAN_VERT},
+  "Tram": {name: "Tram", vert: TRAM_VERT},
+  "Chickadee Double": {name: "Chickadee", vert: CHICKADEE_VERT},
 };
 
 const getSnowbirdLifts = () => {
