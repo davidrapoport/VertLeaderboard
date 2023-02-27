@@ -105,7 +105,7 @@ function Register() {
               placeholder="User name"
             />
             <div className="departmentInputContainer">
-              <label>Which Department are you in?</label>
+              <label>Which department are you in?</label>
               <select
                 className="departmentSelect"
                 name="selectedDepartment"
@@ -122,7 +122,7 @@ function Register() {
             <div className="checkboxInputContainer">
               <label>
                 Do you want to appear in the leaderboard?
-                <br /> If not your vert will still count towards your
+                <br /> If not, your vert will still count towards your
                 department.
               </label>
               <input
