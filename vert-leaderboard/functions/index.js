@@ -2,7 +2,7 @@ const functions = require("firebase-functions");
 
 // The Firebase Admin SDK to access Firestore.
 const admin = require("firebase-admin");
-const {scrapeRides} = require("./Scraper");
+const { scrapeRides } = require("./Scraper");
 const {
   getVertSinceMonday,
   getBestStreak,
@@ -29,10 +29,10 @@ const runRefresh = async () => {
       updateData.bestStreak = getBestStreak(rides);
       updateData.currentStreak = getCurrentStreak(rides);
       const fastestCollins = getFastestCollinsLap(rides);
-      updateData.fastestCollinsLap = fastestCollins ?
-        fastestCollins.fastestTimeSec :
-        1000000;
-      updateData.totalVert = rides.reduce((acc, {totalVert}) => {
+      updateData.fastestCollinsLap = fastestCollins
+        ? fastestCollins.fastestTimeSec
+        : 1000000;
+      updateData.totalVert = rides.reduce((acc, { totalVert }) => {
         return acc + totalVert;
       }, 0);
       updateData.biggestDay = getBiggestDay(rides).vert;
@@ -55,7 +55,14 @@ exports.refreshData = functions.https.onRequest(async (req, res) => {
 });
 
 exports.addNewUser = functions.firestore
-    .document("/users/{documentId}")
-    .onCreate((snap, context) => {
-      return runRefresh();
-    });
+  .document("/users/{documentId}")
+  .onCreate((snap, context) => {
+    return runRefresh();
+  });
+
+exports.scheduledFunctionCrontab = functions.pubsub
+  .schedule("9 10-17 * * *")
+  .timeZone("America/Denver")
+  .onRun((context) => {
+    runRefresh();
+  });
