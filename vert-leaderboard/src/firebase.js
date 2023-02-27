@@ -57,7 +57,7 @@ const DEPARTMENTS = {
   MOD: "Manager Off Duty",
   Desk: "Crossword All-Stars",
   Tron: "Gap Year",
-  Housekeeping: "Garrett's Private Tutors",
+  Housekeeping: "The Pillow Flippers",
   Reservations: "At least we have a window this year",
   Maintenance: "For the love of god shower before you go in the hot tubs",
   Bar: "David gets free beers for life",
