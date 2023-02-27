@@ -10,6 +10,7 @@ import {
   updateDoc,
   connectFirestoreEmulator,
 } from "firebase/firestore";
+import { firebaseConfig } from "./firebaseConfig";
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
@@ -43,6 +44,12 @@ const updateOrRegisterUser = async (userInfo) => {
   return true;
 };
 
+const getAllUsers = async () => {
+  const q = query(collection(db, "users"));
+  const docs = await getDocs(q);
+  return docs.docs.map((doc) => doc.data());
+};
+
 const DEPARTMENTS = {
   Kitchen: "The Broccoli Burners",
   Handie: "Emp Room Nappers",
@@ -53,6 +60,7 @@ const DEPARTMENTS = {
   Reservations: "At least we have a window this year",
   Maintenance: "For the love of god shower before you go in the hot tubs",
   Bar: "David gets free beers for life",
+  "Kids Club": "The Butt Wipers",
 };
 
 const getDepartments = () => Object.keys(DEPARTMENTS);
@@ -65,6 +73,7 @@ export {
   db,
   updateOrRegisterUser,
   getUserFromWebId,
+  getAllUsers,
   getDepartmentTeamName,
   getDepartments,
 };
