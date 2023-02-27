@@ -60,7 +60,11 @@ function Register() {
     setWebId("");
     setUserName("");
     if (success) {
-      alert("Thank you for registering! See you soon");
+      alert(
+        hasStoredWebId
+          ? "Your data has been updated"
+          : "Thank you for registering! Now go on, git"
+      );
       localStorage.setItem("web-id", cleanWebId);
       navigate("/");
     } else {
