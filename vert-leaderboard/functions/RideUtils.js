@@ -25,7 +25,7 @@ const getFastestCollinsLap = (ridesData) => {
   const MAX_TIME_SEC = 60 * 60 * 24;
   let fastestDate = "";
   let fastestTime = MAX_TIME_SEC;
-  ridesData.forEach(({date, totalVert, rides}) => {
+  ridesData.forEach(({date, rides}) => {
     if (rides.length < 1) {
       return;
     }
@@ -34,9 +34,9 @@ const getFastestCollinsLap = (ridesData) => {
       if (rides[i].lift === "Collins" && rides[i - 1].lift === "Collins") {
         const time1 = new Date("1970-01-01T" + rides[i].time).getTime();
         const time2 = new Date("1970-01-01T" + rides[i - 1].time).getTime();
-        const diff_sec = (time1 - time2) / 1000;
-        if (diff_sec < fastestTime) {
-          fastestTime = diff_sec;
+        const diffSec = (time1 - time2) / 1000;
+        if (diffSec < fastestTime) {
+          fastestTime = diffSec;
           fastestDate = date;
         }
       }
@@ -52,21 +52,6 @@ const getFastestCollinsLap = (ridesData) => {
     fastestTime: fastestTimeString,
     fastestDate: fastestDate,
     fastestTimeSec: fastestTime,
-  };
-};
-
-const getBirdLaps = (ridesData) => {
-  const flattenedRides = [];
-  ridesData.forEach((daysRides) =>
-    daysRides.rides.forEach((ride) => flattenedRides.push(ride)),
-  );
-  const birdRides = flattenedRides.filter((ride) => ride.isSnowBird);
-  if (!birdRides.length) {
-    return null;
-  }
-  return {
-    numLaps: birdRides.length,
-    vert: birdRides.reduce((acc, {vert}) => vert + acc, 0),
   };
 };
 
@@ -94,18 +79,6 @@ const sortByDate = (ridesData, sortAscending) => {
 
 const sortAscending = (ridesData) => sortByDate(ridesData, true);
 const sortDescending = (ridesData) => sortByDate(ridesData, false);
-
-const getNumRestDays = (ridesData) => {
-  ridesData = sortAscending(ridesData);
-  let restDays = 0;
-  let lastSkiDay = new Date(ridesData[0].date);
-  for (let i = 1; i < ridesData.length; i++) {
-    const currentDay = new Date(ridesData[i].date);
-    restDays += differenceInDays(currentDay, lastSkiDay) - 1;
-    lastSkiDay = currentDay;
-  }
-  return restDays;
-};
 
 // Since we don't need to compare with local time, we can just
 // use UTC dates to compare here.
@@ -163,21 +136,6 @@ const getCurrentStreak = (ridesData) => {
   return currentStreak;
 };
 
-const getVertLastSevenDays = (ridesData) => {
-  ridesData = sortDescending(ridesData);
-  const today = getCurrentDateAlta();
-  const sevenDaysAgo = subDays(today, 7);
-  let totalVert = 0;
-  let i = 0;
-  let currentDay = convertStringToLocalDate(ridesData[i].date);
-  while (isAfter(currentDay, sevenDaysAgo) && i < ridesData.length) {
-    totalVert += ridesData[i].totalVert;
-    i++;
-    currentDay = convertStringToLocalDate(ridesData[i].date);
-  }
-  return totalVert;
-};
-
 const getVertSinceMonday = (ridesData) => {
   ridesData = sortDescending(ridesData);
   let lastMonday = getCurrentDateAlta();
@@ -196,32 +154,6 @@ const getVertSinceMonday = (ridesData) => {
     currentDay = convertStringToLocalDate(ridesData[i].date);
   }
   return totalVert;
-};
-
-const getMeanVert = (ridesData) => {
-  const seasonVert = ridesData.reduce((acc, {totalVert}) => {
-    return acc + totalVert;
-  }, 0);
-  return Math.floor(seasonVert / ridesData.length);
-};
-
-const getMedianVert = (ridesData) => {
-  ridesData.sort((a, b) => {
-    if (a.totalVert < b.totalVert) {
-      return 1;
-    } else if (a.totalVert > b.totalVert) {
-      return -1;
-    }
-  });
-  return ridesData[Math.floor(ridesData.length / 2)].totalVert;
-};
-
-const getCurrentDateInFormat = () => {
-  const date = new Date();
-  const dateString = new Date(date.getTime() - date.getTimezoneOffset() * 60000)
-      .toISOString()
-      .split("T")[0];
-  return dateString;
 };
 
 const getCurrentDateAlta = () => {
