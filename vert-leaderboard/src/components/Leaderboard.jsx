@@ -35,6 +35,10 @@ const Leaderboard = ({ users }) => {
     sortable: true,
   }));
 
+  // We may have a user who hasn't had the refresh script run for them yet
+  // ignore them here.
+  users = users.filter((u) => u.totalVert);
+
   const tableHeight = Math.min(500, 42 * users.length + 64);
 
   return (

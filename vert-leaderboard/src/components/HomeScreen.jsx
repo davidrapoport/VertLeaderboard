@@ -33,7 +33,7 @@ const HomeScreen = () => {
     });
   }, []);
 
-  if (isLoading) {
+  if (isLoading || !users) {
     return (
       <FadeLoader
         loading={isLoading}
