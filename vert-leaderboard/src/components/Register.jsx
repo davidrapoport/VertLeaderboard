@@ -102,6 +102,7 @@ function Register() {
               type="text"
               className="register__textBox"
               value={webId}
+              readOnly={hasStoredWebId}
               onChange={onChangeWebIdText}
               placeholder="Alta Web Id"
             />
@@ -143,10 +144,12 @@ function Register() {
             <button className="register__btn" onClick={register}>
               {hasStoredWebId ? "Update" : "Register"}
             </button>
-            <div>
-              Already registered? <br />
-              <Link to={"/login"}>Login</Link>
-            </div>
+            {!hasStoredWebId && (
+              <div>
+                Already registered? <br />
+                <Link to={"/login"}>Login</Link>
+              </div>
+            )}
           </>
         )}
       </div>
