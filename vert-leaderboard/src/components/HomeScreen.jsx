@@ -11,6 +11,13 @@ const HomeScreen = () => {
   const [users, setUsers] = useState();
   const navigate = useNavigate();
 
+  const logout = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    localStorage.clear();
+    navigate("/register");
+  };
+
   useEffect(() => {
     const webId = localStorage.getItem("web-id");
     if (!webId) {
@@ -19,6 +26,7 @@ const HomeScreen = () => {
   }, []);
 
   useEffect(() => {
+    setIsLoading(true);
     getAllUsers().then((users) => {
       setUsers(users);
       setIsLoading(false);
@@ -41,8 +49,11 @@ const HomeScreen = () => {
   }
 
   return (
-    <div style={{ display: "flex", "flex-direction": "column" }}>
+    <div style={{ display: "flex", flexDirection: "column" }}>
       <Link to={"register"}>Change your username</Link>
+      <a href="#" onClick={logout}>
+        Logout
+      </a>
       <h1>Leaderboard</h1>
       <Leaderboard
         users={users.filter((u) => u.showInLeaderBoard)}

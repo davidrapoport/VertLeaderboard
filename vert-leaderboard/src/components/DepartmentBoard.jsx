@@ -76,7 +76,7 @@ const DepartmentBoard = ({ users }) => {
     sortable: true,
   }));
 
-  const tableHeight = Math.min(500, 42 * rowData.length + 64);
+  const tableHeight = Math.min(500, 100 * (rowData ? rowData.length : 1) + 64);
 
   return (
     <div>

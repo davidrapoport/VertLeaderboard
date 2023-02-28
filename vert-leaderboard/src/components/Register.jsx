@@ -6,7 +6,7 @@ import {
 } from "../firebase";
 import { FadeLoader } from "react-spinners";
 import "./Register.css";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 function Register() {
   const [webId, setWebId] = useState("");
@@ -143,6 +143,10 @@ function Register() {
             <button className="register__btn" onClick={register}>
               {hasStoredWebId ? "Update" : "Register"}
             </button>
+            <div>
+              Already registered? <br />
+              <Link to={"/login"}>Login</Link>
+            </div>
           </>
         )}
       </div>
