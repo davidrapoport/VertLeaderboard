@@ -63,7 +63,8 @@ function Register() {
       alert(
         hasStoredWebId
           ? "Your data has been updated"
-          : "Thank you for registering! Now go on, git"
+          : "Thank you for registering! Give it a minute " +
+              "for your data to appear in the leaderboard."
       );
       localStorage.setItem("web-id", cleanWebId);
       navigate("/");
