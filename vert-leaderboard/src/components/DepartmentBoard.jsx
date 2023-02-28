@@ -10,6 +10,7 @@ const DepartmentBoard = ({ users }) => {
   const [rowData, setRowData] = useState();
   const [columnDefs, setColumnDefs] = useState([
     { field: "teamName", wrapText: true, autoHeight: true },
+    { field: "numberOfPeople" },
     {
       field: "averageVert",
       sort: "desc",
@@ -45,6 +46,8 @@ const DepartmentBoard = ({ users }) => {
     Object.keys(departmentsMap).forEach((dep) => {
       const usersInDep = departmentsMap[dep];
       const data = {};
+
+      data["numberOfPeople"] = usersInDep.length;
 
       const totalVert = usersInDep.reduce((acc, { totalVert }) => {
         return acc + totalVert;
