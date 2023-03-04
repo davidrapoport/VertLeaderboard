@@ -9,7 +9,7 @@ const {
 const getNumRidesPerLift = (ridesData) => {
   const flattenedRides = [];
   ridesData.forEach((daysRides) =>
-    daysRides.rides.forEach((ride) => flattenedRides.push(ride)),
+    daysRides.rides.forEach((ride) => flattenedRides.push(ride))
   );
   const numRidesPerLift = {};
   flattenedRides.forEach((ride) => {
@@ -25,7 +25,7 @@ const getFastestCollinsLap = (ridesData) => {
   const MAX_TIME_SEC = 60 * 60 * 24;
   let fastestDate = "";
   let fastestTime = MAX_TIME_SEC;
-  ridesData.forEach(({date, rides}) => {
+  ridesData.forEach(({ date, rides }) => {
     if (rides.length < 1) {
       return;
     }
@@ -63,7 +63,7 @@ const getBiggestDay = (ridesData) => {
       return -1;
     }
   });
-  return {vert: ridesData[0].totalVert, date: ridesData[0].date};
+  return { vert: ridesData[0].totalVert, date: ridesData[0].date };
 };
 
 const sortByDate = (ridesData, sortAscending) => {
@@ -89,7 +89,11 @@ const getBestStreak = (ridesData) => {
   for (let i = 1; i < ridesData.length; i++) {
     const currentDay = new Date(ridesData[i].date);
     const lastSkiDay = new Date(ridesData[i - 1].date);
-    if (differenceInDays(currentDay, lastSkiDay) === 1) {
+    if (
+      differenceInDays(currentDay, lastSkiDay) === 1 ||
+      (ridesData[i].date === "2023-01-02" &&
+        ridesData[i - 1].date === "2022-12-31")
+    ) {
       currentStreak++;
     } else {
       if (currentStreak > bestStreak) {
