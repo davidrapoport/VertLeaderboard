@@ -94,7 +94,7 @@ const getRideData = async (
   requestHeaders
 ) => {
   // TODO error handling of malformed WTP.
-  for (let i = authResponseBody.transactions.length - 1; i >= 0; i--) {
+  for (let i = 0; i < authResponseBody.transactions.length; i++) {
     const transactions = authResponseBody.transactions[i];
     const rideRequestBody = {
       nposno: transactions.NPOSNO,
@@ -153,6 +153,7 @@ const parseRides = (ridesJson) => {
       return rideData;
     });
     parsedRides = filterOutSugarPass(parsedRides);
+    parsedRides = dedupeLaps(parsedRides);
 
     parsed.push({
       date: daysRides[0].SZDATEOFRIDE,
@@ -165,6 +166,24 @@ const parseRides = (ridesJson) => {
 
 const filterOutSugarPass = (rides) => {
   return rides.filter((ride) => !ride.lift.startsWith("Sugar Pass"));
+};
+
+const dedupeLaps = (rides) => {
+  const filteredRides = [];
+  if (rides.length <= 1) {
+    return rides;
+  }
+  for (let i = 0; i < rides.length - 1; i++) {
+    const thisLapTime = new Date("1970-01-01T" + rides[i].time).getTime();
+    const nextLapTime = new Date("1970-01-01T" + rides[i + 1].time).getTime();
+    const diffSec = (nextLapTime - thisLapTime) / 1000;
+    if (diffSec < 120) {
+      continue;
+    }
+    filteredRides.push(rides[i]);
+  }
+  filteredRides.push(rides[rides.length - 1]);
+  return filteredRides;
 };
 
 const getDaysVert = (rides) => {
