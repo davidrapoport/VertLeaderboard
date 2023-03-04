@@ -77,6 +77,7 @@ const DepartmentBoard = ({ users }) => {
 
   const defaultColDef = useMemo(() => ({
     sortable: true,
+    rowDrag: false,
   }));
 
   const tableHeight = Math.min(500, 100 * (rowData ? rowData.length : 1) + 64);

@@ -6,12 +6,23 @@ import "ag-grid-community/styles/ag-theme-alpine.css";
 
 const Leaderboard = ({ users }) => {
   const gridRef = useRef();
+  const fakeDanielsVert = (vert) => {
+    const maybeDaniel = users.filter((u) => u.webId === "g98110tm-tf9-rp1");
+    if (maybeDaniel.length !== 1) {
+      return vert.toLocaleString() + " feet";
+    }
+    console.log(maybeDaniel);
+    if (vert === maybeDaniel[0].totalVert) {
+      return "1,000,000,000 feet";
+    }
+    return vert.toLocaleString() + " feet";
+  };
   const [columnDefs, setColumnDefs] = useState([
     { field: "userName" },
     {
       field: "totalVert",
       sort: "desc",
-      valueFormatter: (val) => val.value.toLocaleString() + " feet",
+      valueFormatter: (val) => fakeDanielsVert(val.value),
     },
     {
       field: "biggestDay",
@@ -33,6 +44,7 @@ const Leaderboard = ({ users }) => {
 
   const defaultColDef = useMemo(() => ({
     sortable: true,
+    rowDrag: false,
   }));
 
   // We may have a user who hasn't had the refresh script run for them yet
