@@ -1,5 +1,8 @@
 {
   "projects": {
-    "default": "alodge-vert-leaderboard"
-  }
+    "default": "alodge-vert-leaderboard-8fc95",
+    "leaderboard": "alodge-vert-leaderboard-8fc95"
+  },
+  "targets": {},
+  "etags": {}
 }

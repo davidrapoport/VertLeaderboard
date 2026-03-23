@@ -21,24 +21,50 @@ async function scrapeRides(webId) {
 }
 
 const getAuthCookies = async () => {
-  const url = "https://shop.alta.com/my-ski-history";
-  const headersResponse = await fetch(url);
+  const lookupUrl = "https://shop.alta.com/customer/lookup";
+  const lookupData = {
+    email: "drapoport847@gmail.com",
+    password: "",
+    phone: "",
+  };
+  const lookupResponse = await fetch(lookupUrl, {
+    method: "POST",
+    body: JSON.stringify(lookupData),
+  });
+  if (lookupResponse.status !== 200) {
+    throw new Error(`Lookup request failed with  
+                        code ${lookupResponse.status}`);
+  }
+  const cookies = getCookiesFromResponseHeader(lookupResponse.headers);
+  const headers = Object.assign({}, cookies);
+
+  const url = "https://shop.alta.com/customer/login";
+  const data = {
+    email: "drapoport847@gmail.com",
+    password: "9d6JQ47JZrhG",
+    phone: "",
+  };
+  const headersResponse = await fetch(url, {
+    method: "POST",
+    body: JSON.stringify(data),
+    headers: headers,
+  });
   if (headersResponse.status !== 200) {
     throw new Error(`Request to alta.com failed with error 
                         code ${headersResponse.status}
                         Maybe the server is down or you aren't connected
                         to the internet?`);
   }
-  const cookies = getCookiesFromResponseHeader(headersResponse.headers);
-  const responseBody = await headersResponse.text();
-  const CSRFToken = getCSRFToken(responseBody);
+  cookies = getCookiesFromResponseHeader(headersResponse.headers);
+  responseBody = await headersResponse.text();
+  CSRFToken = getCSRFToken(responseBody);
   cookies["X-CSRF-TOKEN"] = CSRFToken;
   return cookies;
 };
 
 const getUserMetadata = async (requestHeaders, webId) => {
-  const data = { wtp: webId, productId: 0 };
-  const url = "https://shop.alta.com/axess/ride-data";
+  const data = { axess_wtp: webId };
+  const url = "https://shop.alta.com/axess/ski-history";
   const webIdResponse = await fetch(url, {
     method: "POST",
     headers: requestHeaders,
@@ -104,11 +130,14 @@ const getRideData = async (
     };
     const cookies = getCookiesFromResponseHeader(authResponseHeaders);
     Object.assign(cookies, requestHeaders);
-    const ridesResponse = await fetch("https://shop.alta.com/axess/rides", {
-      method: "POST",
-      headers: requestHeaders,
-      body: JSON.stringify(rideRequestBody),
-    });
+    const ridesResponse = await fetch(
+      "https://shop.alta.com/axess/ski-history/rides",
+      {
+        method: "POST",
+        headers: requestHeaders,
+        body: JSON.stringify(rideRequestBody),
+      }
+    );
     if (ridesResponse.status !== 200) {
       continue;
     }
