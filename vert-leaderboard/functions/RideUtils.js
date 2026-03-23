@@ -5,6 +5,7 @@ const {
   isSameDay,
   subDays,
 } = require("date-fns");
+const { log } = require("firebase-functions/logger");
 
 const getNumRidesPerLift = (ridesData) => {
   const flattenedRides = [];

@@ -161,6 +161,14 @@ const getRideData = async (
 
 const parseDate = (str) => new Date(str.replace(/(\d+)(st|nd|rd|th)/, "$1"));
 
+const to24Hour = (time) => {
+  const [timePart, modifier] = time.split(" ");
+  let [hours, minutes] = timePart.split(":");
+  if (modifier === "am" && hours === "12") hours = "00";
+  if (modifier === "pm" && hours !== "12") hours = String(parseInt(hours) + 12);
+  return `${hours.padStart(2, "0")}:${minutes}:00`;
+};
+
 const parseRides = (ridesJson) => {
   const rides = ridesJson.rides;
   const parsed = [];
@@ -173,8 +181,9 @@ const parseRides = (ridesJson) => {
       const rideData = {
         date: parseDate(ride.szdateofride),
         isSnowBird: isSnowBirdLift(ride.szpoename),
-        time: ride.sztimeofride,
-        timestamp: parseDate(ride.szdateofride) + "T" + ride.sztimeofride,
+        time: to24Hour(ride.sztimeofride),
+        timestamp:
+          parseDate(ride.szdateofride) + "T" + to24Hour(ride.sztimeofride),
       };
       if (isSnowBirdLift(ride.szpoename)) {
         Object.assign(rideData, {
