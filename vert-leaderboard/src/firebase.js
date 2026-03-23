@@ -54,20 +54,20 @@ const getAllUsers = async () => {
 
 const DEPARTMENTS = {
   Kitchen: "The Broccoli Burners",
-  Handie: "Emp Room Nappers",
+  Handie: "Daniel's Golden Boys and Girls",
   MOD: "Manager Off Duty",
   Desk: "Crossword All-Stars",
-  Tron: "Gap Year",
+  Tron: "Dannheim Memorial Crew",
   Housekeeping: "The Pillow Flippers",
-  Reservations: "At least we have a window this year",
-  Maintenance: "For the love of god shower before you go in the hot tubs",
-  Bar: "David gets free beers for life",
+  Reservations: "The Room Two Trolls",
+  Maintenance: "You Break It We Fix It",
+  Bar: "Spicy Margs, Spicier Guys",
   "Kids Club": "The Butt Wipers",
 };
 
 const getDepartments = () => Object.keys(DEPARTMENTS);
 const getDepartmentTeamName = (department) => {
-  return DEPARTMENTS[department] + " ( " + department + ")";
+  return DEPARTMENTS[department]; //+ " ( " + department + ")";
 };
 
 export {
