@@ -1,6 +1,5 @@
 import React, { useState, useRef, useMemo, useEffect } from "react";
 import { AgGridReact } from "ag-grid-react";
-
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-alpine.css";
 import { getDepartmentTeamName } from "../firebase";
@@ -8,7 +7,8 @@ import { getDepartmentTeamName } from "../firebase";
 const DepartmentBoard = ({ users }) => {
   const gridRef = useRef();
   const [rowData, setRowData] = useState();
-  const [columnDefs, setColumnDefs] = useState([
+
+  const [columnDefs] = useState([
     { field: "teamName", wrapText: true, autoHeight: true },
     { field: "numberOfPeople" },
     {
@@ -29,9 +29,7 @@ const DepartmentBoard = ({ users }) => {
         (val.value % 60) +
         " seconds",
     },
-    {
-      field: "numberOfCucks",
-    },
+    { field: "numberOfCucks" },
   ]);
 
   useEffect(() => {
@@ -42,61 +40,57 @@ const DepartmentBoard = ({ users }) => {
       }
       departmentsMap[user.department].push(user);
     });
+
     const departmentData = [];
     Object.keys(departmentsMap).forEach((dep) => {
       const usersInDep = departmentsMap[dep];
       const data = {};
-
       data["numberOfPeople"] = usersInDep.length;
-
-      const totalVert = usersInDep.reduce((acc, { totalVert }) => {
-        return acc + totalVert;
-      }, 0);
+      const totalVert = usersInDep.reduce(
+        (acc, { totalVert }) => acc + totalVert,
+        0
+      );
       data["averageVert"] = totalVert / usersInDep.length;
-
       data["averageBiggestDay"] =
-        usersInDep.reduce((acc, { biggestDay }) => {
-          return acc + biggestDay;
-        }, 0) / usersInDep.length;
-
+        usersInDep.reduce((acc, { biggestDay }) => acc + biggestDay, 0) /
+        usersInDep.length;
       data["bestStreak"] = Math.max(...usersInDep.map((u) => u.bestStreak));
-
       data["fastestCollinsLap"] = Math.min(
         ...usersInDep.map((u) => u.fastestCollinsLap)
       );
-
-      data["numberOfCucks"] = usersInDep.reduce((acc, { numberOfCucks }) => {
-        return acc + numberOfCucks;
-      }, 0);
-
+      data["numberOfCucks"] = usersInDep.reduce(
+        (acc, { numberOfCucks }) => acc + numberOfCucks,
+        0
+      );
       data["teamName"] = getDepartmentTeamName(dep);
       departmentData.push(data);
     });
+
     setRowData(departmentData);
   }, [users]);
 
   const defaultColDef = useMemo(() => ({
     sortable: true,
     rowDrag: false,
+    flex: 1,
+    minWidth: 100,
   }));
 
   const tableHeight = Math.min(500, 100 * (rowData ? rowData.length : 1) + 64);
 
   return (
-    <div>
-      <div
-        className="ag-theme-alpine"
-        style={{ width: "100%", height: tableHeight }}
-      >
-        <AgGridReact
-          ref={gridRef}
-          rowData={rowData}
-          columnDefs={columnDefs}
-          defaultColDef={defaultColDef}
-          animateRows={true}
-          rowSelection="single"
-        />
-      </div>
+    <div
+      className="ag-theme-alpine-dark"
+      style={{ width: "100%", height: tableHeight }}
+    >
+      <AgGridReact
+        ref={gridRef}
+        rowData={rowData}
+        columnDefs={columnDefs}
+        defaultColDef={defaultColDef}
+        animateRows={true}
+        rowSelection="single"
+      />
     </div>
   );
 };

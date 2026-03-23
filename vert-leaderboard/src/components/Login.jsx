@@ -70,7 +70,9 @@ function Login() {
         {!isLoading && (
           <>
             <h1 className="register__heading">Welcome Back</h1>
-            <p className="register__subheading">Alta Ski Area · Staff Leaderboard</p>
+            <p className="register__subheading">
+              ALodge 25-26 · Staff Leaderboard
+            </p>
             <input
               type="password"
               className="register__textBox"

@@ -101,7 +101,7 @@ function Register() {
               {hasStoredWebId ? "Your Profile" : "Register"}
             </h1>
             <p className="register__subheading">
-              Alta Ski Area · Staff Leaderboard
+              ALodge 25-26 · Staff Leaderboard
             </p>
             <input
               type="password"
