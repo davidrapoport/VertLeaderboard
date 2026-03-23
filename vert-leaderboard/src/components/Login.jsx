@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 
 function Login() {
   const [webId, setWebId] = useState("");
+  const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
 
@@ -24,6 +25,10 @@ function Login() {
   };
 
   const login = async () => {
+    if (password !== "skialta!") {
+      alert("Incorrect password");
+      return;
+    }
     if (!webId || !validateWebId(webId)) {
       alert("Please enter your Web Id");
       return;
@@ -59,15 +64,20 @@ function Login() {
         <FadeLoader
           loading={isLoading}
           speedMultiplier={0.8}
-          color="maroon"
-          cssOverride={{
-            display: "block",
-            margin: "0 auto",
-            borderColor: "red",
-          }}
-        ></FadeLoader>
+          color="#4a7fd4"
+          cssOverride={{ display: "block", margin: "0 auto 24px" }}
+        />
         {!isLoading && (
           <>
+            <h1 className="register__heading">Welcome Back</h1>
+            <p className="register__subheading">Alta Ski Area · Staff Leaderboard</p>
+            <input
+              type="password"
+              className="register__textBox"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="Password"
+            />
             <input
               type="text"
               className="register__textBox"
@@ -84,4 +94,5 @@ function Login() {
     </div>
   );
 }
+
 export default Login;

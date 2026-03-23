@@ -12,7 +12,7 @@ function Register() {
   const [webId, setWebId] = useState("");
   const [hasStoredWebId, setHasStoredWebId] = useState(false);
   const [userName, setUserName] = useState("");
-  const [showInLeaderBoard, setShowInLeaderBoard] = useState(true);
+  const [password, setPassword] = useState("");
   const [department, setDepartment] = useState(getDepartments()[0]);
   const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
@@ -30,7 +30,6 @@ function Register() {
         const data = docData.data();
         setWebId(data.webId);
         setUserName(data.userName);
-        setShowInLeaderBoard(data.showInLeaderBoard);
         setDepartment(data.department);
       }
       setIsLoading(false);
@@ -42,6 +41,10 @@ function Register() {
   };
 
   const register = async () => {
+    if (password !== "skialta!") {
+      alert("Incorrect password");
+      return;
+    }
     if (!userName) {
       alert("Please enter a User Name");
       return;
@@ -54,7 +57,6 @@ function Register() {
     const success = await updateOrRegisterUser({
       userName,
       webId: cleanWebId,
-      showInLeaderBoard,
       department,
     });
     setWebId("");
@@ -90,15 +92,24 @@ function Register() {
         <FadeLoader
           loading={isLoading}
           speedMultiplier={0.8}
-          color="maroon"
-          cssOverride={{
-            display: "block",
-            margin: "0 auto",
-            borderColor: "red",
-          }}
-        ></FadeLoader>
+          color="#4a7fd4"
+          cssOverride={{ display: "block", margin: "0 auto 24px" }}
+        />
         {!isLoading && (
           <>
+            <h1 className="register__heading">
+              {hasStoredWebId ? "Your Profile" : "Register"}
+            </h1>
+            <p className="register__subheading">
+              Alta Ski Area · Staff Leaderboard
+            </p>
+            <input
+              type="password"
+              className="register__textBox"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="Password"
+            />
             <input
               type="text"
               className="register__textBox"
@@ -129,26 +140,12 @@ function Register() {
                 ))}
               </select>
             </div>
-            <div className="checkboxInputContainer">
-              <label>
-                Do you want to appear in the leaderboard?
-                <br /> If not, your vert will still count towards your
-                department.
-              </label>
-              <input
-                type="checkbox"
-                className="register__textBox"
-                checked={showInLeaderBoard}
-                onChange={(e) => setShowInLeaderBoard(!showInLeaderBoard)}
-              />
-            </div>
             <button className="register__btn" onClick={register}>
-              {hasStoredWebId ? "Update" : "Register"}
+              {hasStoredWebId ? "Update Profile" : "Register"}
             </button>
             {!hasStoredWebId && (
               <div>
-                Already registered? <br />
-                <Link to={"/login"}>Login</Link>
+                Already registered? <Link to={"/login"}>Login</Link>
               </div>
             )}
           </>
@@ -157,4 +154,5 @@ function Register() {
     </div>
   );
 }
+
 export default Register;

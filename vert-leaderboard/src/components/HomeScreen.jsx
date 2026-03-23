@@ -55,9 +55,7 @@ const HomeScreen = () => {
         Logout
       </a>
       <h1>Leaderboard</h1>
-      <Leaderboard
-        users={users.filter((u) => u.showInLeaderBoard)}
-      ></Leaderboard>
+      <Leaderboard users={users}></Leaderboard>
       <h1>Department Leaderboard</h1>
       <DepartmentBoard users={users}></DepartmentBoard>
     </div>

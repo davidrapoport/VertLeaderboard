@@ -3,6 +3,7 @@ const {
   getSnowBirdLiftName,
   getSnowBirdVert,
 } = require("./SnowbirdUtils");
+const { authCredentials } = require("./Credentials");
 const { log } = require("firebase-functions/logger");
 const fetch = require("node-fetch");
 
@@ -43,8 +44,8 @@ const getAuthCookies = async () => {
   );
   const url = "https://shop.alta.com/customer/login";
   const data = {
-    email: "drapoport847@gmail.com",
-    password: "9d6JQ47JZrhG",
+    email: authCredentials.email,
+    password: authCredentials.password,
   };
   const headersResponse = await fetch(url, {
     method: "POST",
@@ -198,7 +199,6 @@ const parseRides = (ridesJson) => {
           isSnowBird: false,
         });
       }
-      log(rideData);
       return rideData;
     });
     parsedRides = filterOutSugarPass(parsedRides);

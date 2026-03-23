@@ -1,48 +1,247 @@
+@import url("https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500&display=swap");
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
 .register {
   height: 100vh;
   width: 100vw;
   display: flex;
   align-items: center;
   justify-content: center;
+  background-color: #1a3a6b;
+  background-image: radial-gradient(
+      ellipse at 20% 50%,
+      rgba(10, 40, 100, 0.6) 0%,
+      transparent 60%
+    ),
+    radial-gradient(
+      ellipse at 80% 20%,
+      rgba(255, 255, 255, 0.03) 0%,
+      transparent 50%
+    ),
+    url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.015'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  font-family: "DM Sans", sans-serif;
+  position: relative;
+  overflow: hidden;
 }
+
+.register::before {
+  content: "ALTA";
+  position: absolute;
+  font-family: "Bebas Neue", sans-serif;
+  font-size: clamp(180px, 30vw, 400px);
+  color: rgba(255, 255, 255, 0.025);
+  letter-spacing: 0.05em;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  white-space: nowrap;
+  user-select: none;
+}
+
 .register__container {
   display: flex;
   flex-direction: column;
-  text-align: center;
-  background-color: #dcdcdc;
-  padding: 30px;
+  width: 100%;
+  max-width: 420px;
+  padding: 48px 40px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  backdrop-filter: blur(12px);
+  position: relative;
+  animation: fadeUp 0.5s ease both;
 }
+
+.register__container::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 40px;
+  right: 40px;
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    #cc1a1a,
+    #ff2020,
+    #cc1a1a,
+    transparent
+  );
+}
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.register__heading {
+  font-family: "Bebas Neue", sans-serif;
+  font-size: 42px;
+  letter-spacing: 0.08em;
+  color: #ffffff;
+  margin: 0 0 6px 0;
+  line-height: 1;
+}
+
+.register__subheading {
+  font-size: 12px;
+  font-weight: 300;
+  color: rgba(255, 255, 255, 0.4);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  margin: 0 0 36px 0;
+}
+
 .register__textBox {
-  padding: 10px;
-  font-size: 18px;
-  margin-bottom: 10px;
+  width: 100%;
+  padding: 12px 16px;
+  font-size: 14px;
+  font-family: "DM Sans", sans-serif;
+  font-weight: 400;
+  letter-spacing: 0.02em;
+  margin-bottom: 12px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+  outline: none;
+  transition: border-color 0.2s, background 0.2s;
+  border-radius: 0;
+  -webkit-appearance: none;
 }
+
+.register__textBox::placeholder {
+  color: rgba(255, 255, 255, 0.25);
+  font-weight: 300;
+}
+
+.register__textBox:focus {
+  border-color: #4a7fd4;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.register__textBox:read-only {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
 .register__btn {
-  padding: 10px;
-  font-size: 18px;
-  margin-bottom: 10px;
+  width: 100%;
+  padding: 14px;
+  margin-top: 8px;
+  font-family: "Bebas Neue", sans-serif;
+  font-size: 20px;
+  letter-spacing: 0.12em;
   border: none;
   color: white;
-  background-color: black;
+  background: #cc1a1a;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.1s;
+  position: relative;
+  overflow: hidden;
 }
-.register div {
-  margin-top: 7px;
+
+.register__btn::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.1) 0%,
+    transparent 60%
+  );
+  pointer-events: none;
+}
+
+.register__btn:hover {
+  background: #e52020;
+}
+
+.register__btn:active {
+  transform: scale(0.99);
 }
 
 .departmentInputContainer {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  margin-bottom: 16px;
+  margin-bottom: 12px;
+}
+
+.departmentInputContainer label,
+.checkboxInputContainer label {
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.4);
+  margin-bottom: 8px;
+  display: block;
 }
 
 .departmentSelect {
-  padding: 4px;
-  margin-top: 8px;
+  width: 100%;
+  padding: 12px 16px;
+  font-size: 14px;
+  font-family: "DM Sans", sans-serif;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+  outline: none;
+  cursor: pointer;
+  transition: border-color 0.2s;
+  border-radius: 0;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='rgba(255,255,255,0.3)' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 16px center;
 }
 
-.checkboxInputContainer {
-  display: flex;
-  flex-direction: column;
-  margin-bottom: 20px;
+.departmentSelect:focus {
+  border-color: #4a7fd4;
+}
+
+.departmentSelect option {
+  background: #1a3a6b;
+  color: #ffffff;
+}
+
+.register__textBox[type="checkbox"] {
+  width: 20px;
+  height: 20px;
+  min-width: 20px;
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
+  accent-color: #4a7fd4;
+}
+
+.register div {
+  margin-top: 20px;
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.45);
+  text-align: center;
+}
+
+.register div a {
+  color: rgba(255, 255, 255, 0.8);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.25);
+  padding-bottom: 1px;
+  transition: color 0.2s, border-color 0.2s;
+}
+
+.register div a:hover {
+  color: #ffffff;
+  border-color: #4a7fd4;
 }
