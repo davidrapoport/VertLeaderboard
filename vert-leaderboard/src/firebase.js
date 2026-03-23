@@ -13,7 +13,7 @@ import {
 import { firebaseConfig } from "./firebaseConfig";
 
 const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
+const auth = getAuth();
 const db = getFirestore(app);
 connectFirestoreEmulator(db, "127.0.0.1", "8080");
 

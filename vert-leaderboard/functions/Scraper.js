@@ -3,6 +3,7 @@ const {
   getSnowBirdLiftName,
   getSnowBirdVert,
 } = require("./SnowbirdUtils");
+const { log } = require("firebase-functions/logger");
 const fetch = require("node-fetch");
 
 async function scrapeRides(webId) {
@@ -10,7 +11,6 @@ async function scrapeRides(webId) {
   const headers = Object.assign({}, authCookies);
   headers["Content-Type"] = "application/json";
   headers.Accept = "application/json";
-  headers["X-Requested-With"] = "XMLHttpRequest";
   const metadataResponse = await getUserMetadata(headers, webId);
   const metadataResponseBody = await metadataResponse.json();
   return await getRideData(
@@ -21,45 +21,49 @@ async function scrapeRides(webId) {
 }
 
 const getAuthCookies = async () => {
-  const lookupUrl = "https://shop.alta.com/customer/lookup";
-  const lookupData = {
-    email: "drapoport847@gmail.com",
-    password: "",
-    phone: "",
-  };
+  const lookupUrl = "https://shop.alta.com/customer/login";
   const lookupResponse = await fetch(lookupUrl, {
-    method: "POST",
-    body: JSON.stringify(lookupData),
+    method: "GET",
   });
   if (lookupResponse.status !== 200) {
     throw new Error(`Lookup request failed with  
                         code ${lookupResponse.status}`);
   }
   const cookies = getCookiesFromResponseHeader(lookupResponse.headers);
-  const headers = Object.assign({}, cookies);
-
+  const headers = Object.assign(
+    {
+      "Content-Type": "application/json",
+      Referer: "https://shop.alta.com/customer/login",
+      "User-Agent":
+        "Mozilla/5.0 (X11; Linux x86_64; rv:148.0) Gecko/20100101 Firefox/148.0",
+      Origin: "https://shop.alta.com",
+      Accept: "application/json",
+    },
+    cookies
+  );
   const url = "https://shop.alta.com/customer/login";
   const data = {
     email: "drapoport847@gmail.com",
     password: "9d6JQ47JZrhG",
-    phone: "",
   };
   const headersResponse = await fetch(url, {
     method: "POST",
     body: JSON.stringify(data),
     headers: headers,
   });
-  if (headersResponse.status !== 200) {
+  if (headersResponse.status > 299) {
+    log("403 headers:", headersResponse.headers.raw());
     throw new Error(`Request to alta.com failed with error 
                         code ${headersResponse.status}
                         Maybe the server is down or you aren't connected
                         to the internet?`);
   }
-  cookies = getCookiesFromResponseHeader(headersResponse.headers);
-  responseBody = await headersResponse.text();
-  CSRFToken = getCSRFToken(responseBody);
-  cookies["X-CSRF-TOKEN"] = CSRFToken;
-  return cookies;
+  let authedCookies = getCookiesFromResponseHeader(headersResponse.headers);
+  // responseBody = await headersResponse.text();
+  // Old version No longer needed
+  // CSRFToken = getCSRFToken(responseBody);
+  // authedCookies["X-CSRF-TOKEN"] = CSRFToken;
+  return authedCookies;
 };
 
 const getUserMetadata = async (requestHeaders, webId) => {
@@ -88,20 +92,24 @@ const getCookiesFromResponseHeader = (responseHeader) => {
   const headers = responseHeader.get("set-cookie");
   // Split into individual cookies
   const cookiesText = headers.split(",");
-  let xsrfCookie = "";
   let xsrfToken = "";
+  let xsrfCookie = "";
   let altaSessionCookie = "";
   // Remove cookie metadata and keep COOKIE-NAME=COOKIEVALUE
   for (const cookieText of cookiesText) {
     const cookieData = cookieText.split(";")[0].trim();
     if (cookieData.startsWith("XSRF-TOKEN")) {
       xsrfCookie = cookieData;
-      xsrfToken = cookieData.split("=")[1].trim();
+      xsrfToken = decodeURIComponent(
+        cookieData.split("=").slice(1).join("=").trim()
+      );
     } else if (cookieData.startsWith("alta_ski_area_session")) {
       altaSessionCookie = cookieData;
     }
   }
-  const cookies = { "X-XSRF-TOKEN": xsrfToken };
+  const cookies = {
+    "X-XSRF-TOKEN": xsrfToken,
+  };
   // if (Platform.OS !== 'ios') {
   cookies.Cookie = xsrfCookie + "; " + altaSessionCookie;
   // }
@@ -119,18 +127,19 @@ const getRideData = async (
   authResponseHeaders,
   requestHeaders
 ) => {
+  let ridesResponse;
   // TODO error handling of malformed WTP.
   for (let i = 0; i < authResponseBody.transactions.length; i++) {
     const transactions = authResponseBody.transactions[i];
     const rideRequestBody = {
-      nposno: transactions.NPOSNO,
-      nprojno: transactions.NPROJNO,
-      nserialno: transactions.NSERIALNO,
-      szvalidfrom: transactions.SZVALIDFROM,
+      nposno: transactions.nposno,
+      nprojno: transactions.nprojno,
+      nserialno: transactions.nserialno,
+      szvalidfrom: transactions.szvalidfrom,
     };
     const cookies = getCookiesFromResponseHeader(authResponseHeaders);
     Object.assign(cookies, requestHeaders);
-    const ridesResponse = await fetch(
+    ridesResponse = await fetch(
       "https://shop.alta.com/axess/ski-history/rides",
       {
         method: "POST",
@@ -144,12 +153,13 @@ const getRideData = async (
     const data = await ridesResponse.json();
     return parseRides(data);
   }
-  console.log("rides data failed");
   throw new Error(`Request to alta.com failed with error 
                         code ${ridesResponse.status}
                         Maybe the server is down or you aren't connected
                         to the internet?`);
 };
+
+const parseDate = (str) => new Date(str.replace(/(\d+)(st|nd|rd|th)/, "$1"));
 
 const parseRides = (ridesJson) => {
   const rides = ridesJson.rides;
@@ -161,31 +171,32 @@ const parseRides = (ridesJson) => {
 
     let parsedRides = daysRides.map((ride) => {
       const rideData = {
-        date: ride.SZDATEOFRIDE,
-        isSnowBird: isSnowBirdLift(ride.SZPOENAME),
-        time: ride.SZTIMEOFRIDE,
-        timestamp: ride.SZDATEOFRIDE + "T" + ride.SZTIMEOFRIDE,
+        date: parseDate(ride.szdateofride),
+        isSnowBird: isSnowBirdLift(ride.szpoename),
+        time: ride.sztimeofride,
+        timestamp: parseDate(ride.szdateofride) + "T" + ride.sztimeofride,
       };
-      if (isSnowBirdLift(ride.SZPOENAME)) {
+      if (isSnowBirdLift(ride.szpoename)) {
         Object.assign(rideData, {
-          vert: getSnowBirdVert(ride.SZPOENAME),
-          lift: getSnowBirdLiftName(ride.SZPOENAME),
+          vert: getSnowBirdVert(ride.szpoename),
+          lift: getSnowBirdLiftName(ride.szpoename),
           isSnowBird: true,
         });
       } else {
         Object.assign(rideData, {
-          vert: ride.NVERTICALFEET ?? 0,
-          lift: ride.SZPOENAME,
+          vert: ride.nverticalfeet.replace(",", "") ?? 0,
+          lift: ride.szpoename,
           isSnowBird: false,
         });
       }
+      log(rideData);
       return rideData;
     });
     parsedRides = filterOutSugarPass(parsedRides);
     parsedRides = dedupeLaps(parsedRides);
 
     parsed.push({
-      date: daysRides[0].SZDATEOFRIDE,
+      date: parseDate(daysRides[0].szdateofride),
       totalVert: getDaysVert(parsedRides),
       rides: parsedRides,
     });
