@@ -13,18 +13,13 @@
         "firebase-debug.log",
         "firebase-debug.*.log"
       ],
-      "predeploy": [
-        "npm run build"
-      ]
+      "predeploy": ["npm run build"]
     }
   ],
   "hosting": {
+    "site": "alodge-vert-leaderboard-2026",
     "public": "build",
-    "ignore": [
-      "firebase.json",
-      "**/.*",
-      "**/node_modules/**"
-    ],
+    "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
     "rewrites": [
       {
         "source": "**",

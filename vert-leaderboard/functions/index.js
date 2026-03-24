@@ -1,6 +1,6 @@
-const functions = require("firebase-functions");
-
-// The Firebase Admin SDK to access Firestore.
+const { onRequest } = require("firebase-functions/v2/https");
+const { onDocumentCreated } = require("firebase-functions/v2/firestore");
+const { onSchedule } = require("firebase-functions/v2/scheduler");
 const admin = require("firebase-admin");
 const { scrapeRides } = require("./Scraper");
 const {
@@ -11,6 +11,7 @@ const {
   getBiggestDay,
   getNumRidesPerLift,
 } = require("./RideUtils");
+
 admin.initializeApp();
 
 const runRefresh = async () => {
@@ -49,20 +50,21 @@ const runRefresh = async () => {
   });
 };
 
-exports.refreshData = functions.https.onRequest(async (req, res) => {
+exports.refreshData = onRequest(async (req, res) => {
   await runRefresh();
   res.status(200).send("Refreshed Users");
 });
 
-exports.addNewUser = functions.firestore
-  .document("/users/{documentId}")
-  .onCreate((snap, context) => {
-    return runRefresh();
-  });
+exports.addNewUser = onDocumentCreated("/users/{documentId}", (event) => {
+  return runRefresh();
+});
 
-exports.scheduledFunctionCrontab = functions.pubsub
-  .schedule("9 10-17 * * *")
-  .timeZone("America/Denver")
-  .onRun((context) => {
-    runRefresh();
-  });
+exports.scheduledFunctionCrontab = onSchedule(
+  {
+    schedule: "9 10-17 * * *",
+    timeZone: "America/Denver",
+  },
+  async (event) => {
+    await runRefresh();
+  }
+);
