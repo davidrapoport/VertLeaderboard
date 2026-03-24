@@ -22,7 +22,6 @@ const getNumRidesPerLift = (ridesData) => {
     }
     numRidesPerLift[ride.lift] += 1;
   });
-  console.log(numRidesPerLift);
   return numRidesPerLift;
 };
 
