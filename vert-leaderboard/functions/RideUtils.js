@@ -24,6 +24,7 @@ const getNumRidesPerLift = (ridesData) => {
 
 const getFastestCollinsLap = (ridesData) => {
   const MAX_TIME_SEC = 60 * 60 * 24;
+  const MIN_COLLINS_SEC = 60 * 7;
   let fastestDate = "";
   let fastestTime = MAX_TIME_SEC;
   ridesData.forEach(({ date, rides }) => {
@@ -36,6 +37,9 @@ const getFastestCollinsLap = (ridesData) => {
         const time1 = new Date("1970-01-01T" + rides[i].time).getTime();
         const time2 = new Date("1970-01-01T" + rides[i - 1].time).getTime();
         const diffSec = (time1 - time2) / 1000;
+        if (diffSec < MIN_COLLINS_SEC) {
+          continue;
+        }
         if (diffSec < fastestTime) {
           fastestTime = diffSec;
           fastestDate = date;
