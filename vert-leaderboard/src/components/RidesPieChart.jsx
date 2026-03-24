@@ -30,7 +30,10 @@ const RidesPieChart = ({ numRidesPerLift }) => {
       <div className="donut__legend">
         {data.map(({ name, color }) => (
           <div className="donut__legend-item" key={name}>
-            <span className="donut__legend-swatch" style={{ background: color }} />
+            <span
+              className="donut__legend-swatch"
+              style={{ background: color }}
+            />
             <span className="donut__legend-label">{name}</span>
           </div>
         ))}

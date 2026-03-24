@@ -201,7 +201,7 @@ const parseRides = (ridesJson) => {
       }
       return rideData;
     });
-    parsedRides = filterOutSugarPass(parsedRides);
+    parsedRides = filterOutDesktopReaders(filterOutSugarPass(parsedRides));
     parsedRides = dedupeLaps(parsedRides);
 
     parsed.push({
@@ -215,6 +215,10 @@ const parseRides = (ridesJson) => {
 
 const filterOutSugarPass = (rides) => {
   return rides.filter((ride) => !ride.lift.startsWith("Sugar Pass"));
+};
+
+const filterOutDesktopReaders = (rides) => {
+  return rides.filter((ride) => !ride.lift.startsWith("ALTA DESKTOP"));
 };
 
 const dedupeLaps = (rides) => {

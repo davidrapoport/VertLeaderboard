@@ -15,7 +15,7 @@ import { firebaseConfig } from "./firebaseConfig";
 const app = initializeApp(firebaseConfig);
 const auth = getAuth();
 const db = getFirestore(app);
-connectFirestoreEmulator(db, "127.0.0.1", "8080");
+// connectFirestoreEmulator(db, "127.0.0.1", "8080");
 
 const getUserFromWebId = async (webId) => {
   const q = query(collection(db, "users"), where("webId", "==", webId));
@@ -24,6 +24,15 @@ const getUserFromWebId = async (webId) => {
     return null;
   }
   return docs.docs[0];
+};
+
+export const getUserRides = async (webId) => {
+  const db = getFirestore();
+  const userDoc = await getDocs(
+    query(collection(db, "users"), where("webId", "==", webId))
+  );
+  if (userDoc.empty) return null;
+  return userDoc.docs[0].data().rides;
 };
 
 const updateOrRegisterUser = async (userInfo) => {
