@@ -1,0 +1,135 @@
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500&display=swap');
+
+.donut__loader {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 80px 0;
+}
+
+.donut {
+  padding: 0 40px 60px;
+  font-family: 'DM Sans', sans-serif;
+  color: #ffffff;
+  animation: fadeUp 0.4s ease both;
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.donut__header {
+  padding: 32px 0 24px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  margin-bottom: 32px;
+  position: relative;
+}
+
+.donut__header::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  width: 60px;
+  height: 2px;
+  background: #cc1a1a;
+}
+
+.donut__title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 36px;
+  letter-spacing: 0.1em;
+  margin: 0 0 8px 0;
+  line-height: 1;
+}
+
+.donut__commentary {
+  font-size: 13px;
+  font-weight: 300;
+  color: rgba(255, 255, 255, 0.55);
+  margin: 0;
+  font-style: italic;
+  max-width: 520px;
+}
+
+.donut__body {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 48px;
+  flex-wrap: wrap;
+}
+
+/* PIE CHART */
+.donut__chart-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.donut__legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 20px;
+  max-width: 280px;
+}
+
+.donut__legend-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.donut__legend-swatch {
+  width: 28px;
+  height: 10px;
+  display: inline-block;
+  flex-shrink: 0;
+}
+
+.donut__legend-label {
+  font-size: 12px;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+/* TABLE */
+.donut__table-wrapper {
+  flex: 1;
+  min-width: 280px;
+  overflow-x: auto;
+}
+
+.donut__table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.donut__table th {
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.4);
+  text-align: left;
+  padding: 10px 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(10, 30, 80, 0.4);
+}
+
+.donut__table td {
+  padding: 10px 16px;
+  color: rgba(255, 255, 255, 0.8);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.donut__table tbody tr:hover {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.donut__table tbody tr:last-child td {
+  border-bottom: none;
+}
