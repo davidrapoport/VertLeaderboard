@@ -41,6 +41,7 @@ const runRefresh = async () => {
       updateData.numberOfCucks = numRidesPerLift["Collins Angle"] ?? 0;
       updateData.failedScraping = false;
       updateData.lastUpdateTime = new Date().toISOString();
+      updateData.rides = rides;
     } catch (e) {
       console.log(e);
       updateData.failedScraping = true;
